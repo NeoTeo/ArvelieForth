@@ -1,0 +1,44 @@
+( teos first FORTH )
+: arse   ." Froody" ;
+
+( returns the number of days in a given month )
+: monthdays   	dup  2 = if drop 28  else
+		dup  4 = if drop 30  else
+		dup  6 = if drop 30  else
+		dup  9 = if drop 30  else
+		dup 11 = if drop 30  else
+		dup 13 < if drop 31  else
+			    drop
+		    then then then then then then ; 
+
+: countdays   ( total month -- daycount ) 
+    dup 0 = if drop else 
+    dup monthdays rot + swap 1 - recurse 
+        then ;	     
+
+( counts whole days since jan 1 and the given date)
+: dayssince  ( day month -- dayssince)
+    1 - 0 swap countdays + ;
+
+: min14  ( val -- val>=14 )
+    dup 14 < if drop 14 then ;
+
+( divide the given number by 14 and round the result )
+: roundeddiv14 ( numerator -- addition )
+    14 /mod swap 7 < if else 1 + 
+	then ;
+
+( Convert Gregorian date to Arvelie )
+: gregorian-to-arvelie   ( gregorian-day gregorian-month -- arvelie )
+    dayssince 14 /mod ;
+
+: arvelie-month-display   ( arvelie-month -- )
+    dup 26 < if 65 + emit else 
+	43 emit then ; 
+
+: arvelie-day-display   ( arvelie-days -- )
+	10 /mod 48 + emit 48 + emit ;
+
+( display the arvelie date in string format )
+: arvelie-display   ( arvelie -- )
+	arvelie-month-display arvelie-day-display ;
