@@ -18,23 +18,16 @@
 
 ( counts whole days since jan 1 and the given date)
 : dayssince  ( day month -- dayssince)
-    1 - 0 swap countdays + ;
-
-: min14  ( val -- val>=14 )
-    dup 14 < if drop 14 then ;
-
-( divide the given number by 14 and round the result )
-: roundeddiv14 ( numerator -- addition )
-    14 /mod swap 7 < if else 1 + 
-	then ;
+    1 - 0 swap countdays + 1 - ;
 
 ( Convert Gregorian date to Arvelie )
 : gregorian-to-arvelie   ( gregorian-day gregorian-month -- arvelie )
     dayssince 14 /mod ;
 
 : arvelie-month-display   ( arvelie-month -- )
-    dup 26 < if 65 + emit else 
-	43 emit then ; 
+    dup 25 > if 43 emit drop else 
+	65 + emit 
+	then ; 
 
 : arvelie-day-display   ( arvelie-days -- )
 	10 /mod 48 + emit 48 + emit ;
